@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triple Gyrus Core Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+            color: #111;
+            background-color: #eee;
+        }
+
+        a { color: #111; }
+
+        header, footer {
+            padding: 20px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 1.5em;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+            color: #111;
+            background-color: #eee;
+            border-width: 10px;
+            border-color: #111;
+            line-height: 1.5;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 24px;
+            background-color: #111;
+            color: #eee;
+            border: 3px solid #111;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        button:active {
+            background-color: #000;
+        }
+        
+        /* Enhanced focus indicators for AAA */
+        *:focus {
+            outline: 3px solid #009;
+            outline-offset: 2px;
+        }
+
+        /* Handle tiny screens */
+        @media (max-width: 480px) {
+            h1 { font-size: 1em; }
+        }
+
+        /* Respect user preferences */
+        @media (prefers-color-scheme: dark) {
+            body, textarea {
+                background-color: #111;
+                color: #eee;
+            }
+            textarea {
+                border-color: #eee;
+                unicode-bidi: plaintext;
+            }
+            *:focus {
+                outline-color: #CCF;
+            }
+            a { color: #eee; }
+            button {
+                background-color: #eee;
+                color: #111;
+                border-color: #eee;
+            }
+            button:hover {
+                background-color: #ccc;
+            }
+            button:active {
+                background-color: #fff;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Triple Gyrus Core Editor</h1>
+        <button id="download-btn" aria-label="Download File Button">Download File</button>
+        <div role="status" aria-live="polite" aria-atomic="true" id="download-status"></div>
+    </header>
+    <main>
+        <textarea id="editor" aria-label="Triple Gyrus Core Editor Text Area"></textarea>
+    </main>
+    <footer>
+        <p>&copy; 2025 <a href="https://jsrc.expert">Jessica Reuter Castrogiovanni</a></p>
+    </footer>
+    <script>
+// Download button
+downloadCount = 0
+document.getElementById('download-btn').addEventListener('click', () => {
+    result = "unknown"
+    try {
+        const content = document.getElementById('editor').value;
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        downloadCount = downloadCount + 1
+    
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'document.atgc';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        result = "succeeded"
+    } catch (e) {
+        result = "failed"
+    }
+    msg = "Download " + downloadCount + " " + result + "."
+    document.getElementById("download-status").textContent = msg
+});
+    </script>
+    <script>
+// Enforce that markers and text have to be on separate lines
+
+// Formatting function
+function formatTripleGyrusCore(text) {
+    let formatted = text;
+    formatted = formatted.replace(/([^\n])(?<!\^)(\^[\+\p{Nd}])/gu, '$1\n$2');
+    formatted = formatted.replace(/([\+\p{Nd}]\^)(?!\^)([^\n])/gu, '$1\n$2');
+    formatted = formatted.replace(/\n{3,}/g, '\n\n');
+    formatted = formatted.split('\n').map(line => line.trim()).join('\n');
+    return formatted;
+}
+
+// Format on input with debouncing to avoid interfering with typing
+// Also format on blur for immediate cleanup when leaving the field
+const editor = document.getElementById('editor');
+let formatTimeout;
+editor.addEventListener('input', function() {
+    clearTimeout(formatTimeout);
+    formatTimeout = setTimeout(() => {
+        const cursorPos = this.selectionStart;
+        const scrollPos = this.scrollTop;
+        const oldLength = this.value.length;
+
+        this.value = formatTripleGyrusCore(this.value);
+        const newLength = this.value.length;
+        const lengthDiff = newLength - oldLength;
+
+        this.selectionStart = this.selectionEnd = cursorPos + lengthDiff;
+        this.scrollTop = scrollPos;
+    }, 500); // Format 500ms after user stops typing
+});
+editor.addEventListener('blur', function() {
+    clearTimeout(formatTimeout);
+    this.value = formatTripleGyrusCore(this.value);
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+Section 1: what is Triple Gyrus Core?
+
+Triple Gyrus Core is a standardized system for creating structured data that can be used with any written language. Its structure is optimized for analog-to-digital transformation with optical character recognition (OCR), accessibility, and universality. Although Triple Gyrus Core itself is not an OCR system and cannot guarantee proper OCR, its syntax is built to make OCR easier and more consistent.
+
+With Triple Gyrus Core, you can:
+
+1. write it out by hand
+2. create Triple Gyrus Core overlays, which can be placed on top of existing documents to indicate where structured data exists
+3. take digital pictures of existing paper documents, mark up those images with Triple Gyrus Core overlays, then extract data in Triple Gyrus Core format with OCR
+4. mark up complex digital documents that can be converted to text, like spreadsheets, with Triple Gyrus Core overlays to ensure reliable extraction of structured Triple Gyrus Core content through parsing the text
+5. mark up complex digital documents that cannot be converted easily to text, like PDFs and images, with Triple Gyrus Core overlays to ensure reliable extraction of structured Triple Gyrus Core content with OCR that can then be parsed
+
+Triple Gyrus Core uses the accessible path approach. This means designing for all users and all real-world conditions from the start, and assuming that code will break unless tests prove otherwise. This is different from the "happy path" approach of designing for ideal conditions and adding accessibility later. It is also different from the "adversarial path" that assumes that users or developers are hostile.
+
+Section 2: reading this manual
+
+This manual is built to minimize mental processing while reading. Its sections:
+
+1. minimize symbol use
+2. minimize capital letters and punctuation in headers and lists
+3. use only sections and subsections, rather than numbers separated by dots
+4. start examples with the phrase "example start" to provide both a visual and auditory cue
+5. end examples with the phrase "example end" to provide both a visual and auditory cue
+
+Section 3: basic syntax
+
+This section describes the basic syntax of Triple Gyrus Core.
+
+Section 3 subsection 1: character and symbol management
+
+Triple Gyrus Core uses 2 special symbols to create structured data:
+
+1. caret
+2. plus sign
+
+These characters are universally supported by assistive technology. Screen readers and speech to text software can understand these symbols. Each symbol is distinct in tactile reading systems.
+
+Section 3 subsection 2: structural elements
+
+Anything between two carets is a structural element in Triple Gyrus Core. There are two types of structural elements: markers and indicators. They each use non-negative whole numbers, that is, numbers greater than or equal to 0 that do not have decimal parts.
+
+The examples in this section use negative numbers in structural elements to avoid confusion with valid structural elements. Valid structural elements will be defined in later sections.
+
+Markers are structured as caret, plus sign, non-negative whole number, plus sign, non-negative whole number, caret. The first plus sign after the caret indicates where the marker content starts, so it is clear whether the marker is written from left to right or right to left. The first non-negative whole number is the marker category, and the second non-negative whole number is the marker type. Markers show where data begins and ends; they can be on their own line, on the same line as their content, or a combination of those. Anything between markers is part of their information, whether there are new lines or not.
+
+example start
+Correct structure of two markers
+^+-1+-1^ Information ^+-1+-1^
+^+-1+-1^
+More information
+^+-1+-1^
+example end
+
+You must always close the current marker before opening another marker.
+
+example start
+Incorrect structure of markers mixed together
+^+-1+-1^
+Information ^+-1+-2^ with bad structure ^+-1+-2^
+^+-1+-1^
+example end
+
+Indicators are structured as caret, caret, non-negative whole number, caret, caret. The number is the indicator type. Indicators provide context for marker content where necessary.
+
+example start
+Correct structure of a marker that contains an indicator
+^+-1+-1^
+Information
+^^-1^^
+More information
+^+-1+-1^
+example end
+
+Indicators may not appear inside markers themselves; they must appear only in the information the markers enclose.
+
+example start
+Incorrect structure of indicator inside a marker
+^+-1+-1^^-1^^^
+Information
+More information
+^+-1+-1^
+example end
+
+Section 3 subsection 3: raw information
+
+Any raw information Triple Gyrus Core handles inside markers is called a component. There are two kinds of components: numbers and texts.
+
+Numbers are sequences of digits, sometimes with a negative sign or a decimal part. They can be written in many styles across languages and cultures. Negative signs, decimal separators, and number separators vary depending on the language and writing system being used. Texts are anything that you can write out that is not just a number.
+
+Section 3 subsection 4: creating triples
+
+The examples in this section use negative numbers in markers to avoid confusion with valid markers. The negative numbers only distinguish between markers; they do not imply order or a specific structure. Valid markers will be defined in later sections.
+
+Each combination of components and markers is called a unit.
+
+example start
+A unit containing the marker ^+-1+-1^ and text "abc"
+^+-1+-1^ abc ^+-1+-1^
+example end
+
+Information in Triple Gyrus Core is built as groups of three units, which are called triples. Triples are built sequentially from units. Units 1-3 form the first triple, units 4-6 form the second triple, and so on. Within each triple, the order of the units does not matter, so triple 'a b c' is the same as triple 'c b a.'
+
+If there are not enough units to create a triple, the Triple Gyrus Core text will not be valid. All information outside of markers is excluded from a triple.
+
+Triples are built with 3 defined pieces, where every piece is relevant to the triple.
+
+example start
+A triple
+^+-1+-1^ a ^+-1+-1^
+^+-1+-2^ b ^+-1+-2^
+^+-1+-3^ c ^+-1+-3^
+
+Another triple
+^+-1+-1^ d ^+-1+-1^
+^+-1+-2^ e ^+-1+-2^
+^+-1+-3^ f ^+-1+-3^
+example end
+
+Section 3 subsection 5: grouping triples in a gyrus
+
+When building a Triple Gyrus Core triple, you must create that triple inside a container called a gyrus. The triples in a gyrus are only defined inside that container. One gyrus cannot be created inside another gyrus, and you must finish creating one gyrus before you start creating another.
+
+Like other triples, the markers you will use to start and finish gyrus creation will depend on what you are doing with your data, as future sections will show. The triples used to start and finish gyrus creation are called gyrus triples.
+
+Gyrus triples contain 3 parts: the gyrus ID, the gyrus reference number, and the gyrus indicator. The gyrus ID is the unique name for the gyrus. The gyrus reference number is a context number you add to triples inside the gyrus to provide information about which gyrus the triple is in. This is important for people with atypical or no vision. The gyrus indicator identifies whether a gyrus is being started or finished.
+
+Use the same triple to start and finish gyrus creation, containing the gyrus ID, the gyrus reference number, and a gyrus indicator. Use indicator ^^1^^ for starting gyrus creation, and indicator ^^2^^ for finishing gyrus creation.
+
+example start
+Start creating the gyrus
+^+-1+-1^ my gyrus ID ^+-1+-1^
+^+-1+-2^ gyrus reference number ^+-1+-2^
+^+-1+-3^ ^^1^^ ^+-1+-3^
+
+Create a triple in the gyrus
+^+-1+-1^ d ^+-1+-1^
+^+-1+-2^ e ^+-1+-2^
+^+-1+-3^ gyrus reference number ^+-1+-3^
+
+Finish creating the gyrus
+^+-1+-1^ my gyrus ID ^+-1+-1^
+^+-1+-2^ gyrus reference number ^+-1+-2^
+^+-1+-3^ ^^2^^ ^+-1+-3^
+example end
+
+Section 4: creating an OCR gyrus
+
+When using Triple Gyrus Core to pull out information with OCR, use the following markers:
+
+^+1+1^ Create an OCR gyrus ID
+^+1+2^ Create an OCR gyrus reference number
+^+1+3^ Create an OCR gyrus indicator
+^+1+4^ Identify a number to extract
+^+1+5^ Identify a text to extract
+^+1+6^ Create a name for the extracted information
+
+To create a Triple Gyrus Core overlay, add gyrus triples to your document, then mark up the rest of your data inside those gyrus triples.
+
+You can use the following triples to mark up information:
+
+^+1+1^ ^+1+2^ ^+1+3^
+Start or finish the OCR gyrus
+
+^+1+4^ ^+1+2^ ^+1+6^
+Extract a number and associate it with the OCR gyrus
+
+^+1+5^ ^+1+2^ ^+1+6^
+Extract a text and associate it with the OCR gyrus
+
+For example, if you had the following information in a document:
+
+example start
+My Document Title
+
+This is my document. It has information inside it.
+
+This is a table with numbers in my document.
+
+Table 1
+Column A	Column B	Column C
+1	2	3
+example end
+
+You could mark up its information like this:
+
+example start
+^+1+1^ my gyrus ID ^+1+1^ ^+1+2^ 123 ^+1+2^ ^+1+3^ ^^+1^^ ^+1+3^
+^+1+5^ My Document Title ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document title ^+1+3^
+
+^+1+5^ This is my document. It has information inside it. ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document summary ^+1+3^
+
+^+1+5^ This is a table with numbers in my document. ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document table summary ^+1+3^
+
+Table ^+1+4^ 1 ^+1+4^ ^+1+2^ 123 ^+1+2^ ^+1+3^ table 1 ^+1+3^
+^+1+5^ Column A ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column header A ^+1+3^ ^+1+5^ Column B ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column header B ^+1+3^ ^+1+5^ Column C ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column header C ^+1+3^
+^+1+4^ 1 ^+1+4^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column A cell 1 ^+1+3^ ^+1+4^ 2 ^+1+4^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column B cell 1 ^+1+3^ ^+1+4^ 3 ^+1+4^ ^+1+2^ 123 ^+1+2^ ^+1+3^ column C cell 1 ^+1+3^
+^+1+1^ my gyrus ID ^+1+1^ ^+1+2^ 123 ^+1+2^ ^+1+3^ ^^2^^ ^+1+3^
+example end
+
+For tables, it may be more useful to pull information out row by row and refine later:
+
+example start
+^+1+1^ my gyrus ID ^+1+1^ ^+1+2^ 123 ^+1+2^ ^+1+3^ ^^+1^^ ^+1+3^
+^+1+5^ My Document Title ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document title ^+1+3^
+
+^+1+5^ This is my document. It has information inside it. ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document summary ^+1+3^
+
+^+1+5^ This is a table with numbers in my document. ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ document table summary ^+1+3^
+
+Table ^+1+4^ 1 ^+1+4^ ^+1+2^ 123 ^+1+2^ ^+1+3^ table 1 ^+1+3^
+^+1+5^ Column A	Column B	Column C ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ table 1 header row ^+1+3^
+^+1+5^ 1	2	3 ^+1+5^ ^+1+2^ 123 ^+1+2^ ^+1+3^ table 1 row 1 ^+1+3^
+^+1+1^ my gyrus ID ^+1+1^ ^+1+2^ 123 ^+1+2^ ^+1+3^ ^^2^^ ^+1+3^
+example end
+
+As long as your document has room to add Triple Gyrus Core markers, you can extract data from it. It may be useful to have multiple Triple Gyrus Core overlays for a document to pull out information in pieces, particularly for visually congested information.
+
+A good strategy for Triple Gyrus Core overlays is to create them as an image with the overlays on a transparent background, then put that image over your original document (which could be an image, PDF, anything that allows image overlays digitally) and save that as a new copy. That way, you can reuse them instead of creating them fresh for every similar document.
+
+After you extract Triple Gyrus Core content with OCR, use the included self-contained editor.html file, which you can open in any modern browser, to examine and edit the content as necessary. The editor requires markers and their content to be on separate lines and enforces this dynamically, which allows markers in various number systems to coexist with text that reads left to right or right to left.
+
+Section 5: marker and indicator reference
+
+Markers
+^+1+1^ Create an OCR gyrus ID
+^+1+2^ Create an OCR gyrus reference number
+^+1+3^ Create an OCR gyrus indicator
+^+1+4^ Identify a number to extract
+^+1+5^ Identify a text to extract
+^+1+6^ Create a name for the extracted information
+
+Indicators
+^^1^^ Start an OCR gyrus
+^^2^^ Finish an OCR gyrus
