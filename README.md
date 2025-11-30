@@ -4,6 +4,7 @@ Triple Gyrus Core is a standardized system for creating structured data that can
 
 **Version**: 1 (Initial Release)  
 **Date**: 2025-11-30
+**DOI**: https://doi.org/10.5281/zenodo.17772031
 
 ## What Can You Do With Triple Gyrus Core?
 
