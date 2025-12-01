@@ -71,5 +71,6 @@ Contributions are welcome! Since this project uses AGPL-3.0, any contributions w
 
 ## Author
 
-© 2025 Jessica Reuter Castrogiovanni  
-https://jsrc.expert
+© 2025 Triple Gyrus Core 
+triplegyruscore@gmail.com
+https://triplegyruscore.github.io/
